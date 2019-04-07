@@ -17,4 +17,3 @@ function HandlerUrl() {
         }
     }
 }
-console.log("我执行了FDASFDSA")

@@ -19,32 +19,29 @@ const gulp = require("gulp"),
 	cssPath = "src/static/css/**/*.css",
 	htmlPath = "src/views/*.html";
 
-gulp.task("concat", function (done) {
+gulp.task("concat", function(done) {
 	gulp.src(jsPath)
 		.pipe(concat("all.js"))
 		.pipe(gulp.dest("./dist/"))
 	done()
 })
-gulp.task("html", function (done) {
+gulp.task("html", function(done) {
 	gulp.src(htmlPath)
 		.pipe(gulp.dest("./dist/"))
 	done();
 })
 
-gulp.task("test", gulp.series(["concat", "html"], function () {
+gulp.task("test", gulp.series(["concat", "html"], function() {
 	browserSync.init({
 		server: {
 			baseDir: "dist/",
 		},
 		post: 8050
 	});
-	watch([jsPath, htmlPath], function () {
-		gulp.series(["concat", "html"]);
-		browserSync.reload;
-	});
+	gulp.watch([jsPath, htmlPath],gulp.series(["concat", "html"])).on("change", browserSync.reload);
 }))
 
-gulp.task("clean", function () {
+gulp.task("clean", function() {
 	del([
 		"dist"
 	]).then()

@@ -1,6 +1,3 @@
-console.log("b")
-console.log("d")
-console.log("c")
 function HandlerReg() {
 	this.mobile = /^1[3456789]\d{9}$/; //手机号
 	this.pwd = /[\d\w]{6,20}/; //密码
@@ -20,22 +17,3 @@ HandlerReg.prototype = {
 }
 var reg = new HandlerReg().isVerify("code","112")
 console.log(reg);
-function HandlerUrl() {
-    this.getQuery = function () {
-        var query = {},
-            queryStr = window.location.search.substr(1);
-        if (queryStr) {
-            var queryArr = queryStr.split("&"),
-                _queryArr = [],
-                len = queryArr.length;
-            do {
-                len--;
-                _queryArr = queryArr[len].split("=");
-                query[_queryArr[0]] = decodeURIComponent(_queryArr[1])
-            } while (len > 0)
-            return query;
-        }else{
-            return null;
-        }
-    }
-}
