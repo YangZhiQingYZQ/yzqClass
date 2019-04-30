@@ -97,22 +97,83 @@ var HandlerReg = function () {
 	}
 };
 console.log(HandlerReg().replaceType('encryptBankCode', '6228480078809886479'));
-function HandlerUrl() {
-    this.getQuery = function () {
-        var query = {},
-            queryStr = window.location.search.substr(1);
-        if (queryStr) {
-            var queryArr = queryStr.split("&"),
-                _queryArr = [],
-                len = queryArr.length;
-            do {
-                len--;
-                _queryArr = queryArr[len].split("=");
-                query[_queryArr[0]] = decodeURIComponent(_queryArr[1])
-            } while (len > 0)
-            return query;
-        }else{
-            return null;
+var HandlerUrl = function () {
+    var urlfn = {
+        /**
+         * 
+         * @param {Boolean} type 是否进行整个URL的转码，默认不转 
+         */
+        getQuery: function (type) {
+            console.log(type);
+            var query = {},
+                search = window.location.search,
+                queryStr = type ? decodeURIComponent(search).substr(1) : search.substr(1);
+            if (queryStr) {
+                var queryArr = queryStr.split("&"),
+                    _queryArr = [],
+                    len = queryArr.length;
+                do {
+                    len--;
+                    _queryArr = queryArr[len].split("=");
+                    query[_queryArr[0]] = decodeURIComponent(_queryArr[1])
+                } while (len > 0)
+                return query;
+            } else {
+                return null;
+            }
+        },
+        /**
+         * 
+         * @param {Objeck} data //参数对象
+         * @param {String} data.url //跳转的链接
+         * @param {Objeck} data.params //跳转需要携带的参数
+         */
+        joinUrl: function (data) {
+            var params = data.params,
+                key, query = "?";
+            for (key in params) {
+                query += key + "=" + params[key] + "&";
+            }
+            return data.url + query.substring(0, query.length - 1);
         }
     }
+    return function (type, data) {
+        return urlfn[type](data);
+    }
+}
+console.log(HandlerUrl()("joinUrl", {
+    url: "xxx.html",
+    params: {
+        aa: "a",
+        bb: "bb"
+    }
+}));
+/**
+ * 寄生组合式继承函数
+ * @param {Function} subClass 
+ * @param {Function} superClass 
+ * @param {Object||Array} obj 
+ */
+function inheritProtorype(subClass, superClass, obj) {
+    function F() {};
+    F.prototype = superClass.prototype;
+    var p = new F(),
+        toString = Object.prototype.toString;
+    if (obj) {
+        var type = toString.call(obj);
+        if (type == "[object Array]") {
+            var i = obj.length;
+            for (; i >= 0; i--) {
+                for (j in obj[i]) {
+                    p[j] = obj[i][j]
+                }
+            }
+        } else {
+            for (j in obj) {
+                p[j] = obj[j];
+            }
+        }
+    }
+    p.constructor = subClass;
+    subClass.prototype = p;
 }
