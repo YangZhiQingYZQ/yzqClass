@@ -25,7 +25,7 @@ var HandlerReg = function () {
 			return (val + "").replace(/^(.{4}).*(.{3})$/, "$1 **** **** *$2")
 		},
 		//手机号码 显示前三位和后三位
-		phone:function(val){
+		phone: function (val) {
 			return (val + "").replace(/^(.{3}).*(.{3})$/, "$1*****$2")
 		},
 		// 更改姓名显示，只显示最后一个
@@ -38,6 +38,34 @@ var HandlerReg = function () {
 			}
 			return strArr.join("");
 		},
+		// 判断数值为0或者-0
+		isNegZero: function (val) {
+			val = Number(val);
+			return (n === 0) && (1 / n === -Infinity);
+		},
+		// 判断NaN
+		isNaN: function (val) {
+			if (!Number.isNaN) {
+				return val !== val;
+			} else {
+				return Number.isNaN(val);
+			}
+		},
+		// 判断两个值是否绝对相等
+		isEquality(val1, val2) {
+			if (!Object.is) {
+				switch (true) {
+					case val1 === 0 && val2 === 0:
+						return 1 / val1 == 1 / val2
+					case val1 !== val2:
+						return val2 !== val2;
+					default:
+						return val1 === val2;
+				}
+			} else {
+				return Object.is(val1, val2)
+			}
+		}
 	}
 	//验证方法
 	function isVerify(type, val) {
@@ -53,4 +81,3 @@ var HandlerReg = function () {
 		replaceType: replaceType
 	}
 };
-console.log(HandlerReg().replaceType('encryptBankCode', '6228480078809886479'));
